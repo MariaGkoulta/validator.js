@@ -1,31 +1,26 @@
-import assertString from './util/assertString.js';
+import assertString from './util/assertString';
 
-//Algorithm to calculate the Luhn check digit
+// Algorithm to calculate the Luhn check digit
 function luhn_checksum(code) {
-    var len = code.length
-    var parity = len % 2
-    var sum = 0
-    for (var i = len-1; i >= 0; i--) {
-        var d = parseInt(code.charAt(i))
-        if (i % 2 == parity) { d *= 2 }
-        if (d > 9) { d -= 9 }
-        sum += d
-    }
-    return sum % 10
+  let len = code.length;
+  let parity = len % 2;
+  let sum = 0;
+  for (let i = len - 1; i >= 0; i--) {
+    let d = parseInt(code.charAt(i), 10);
+    if (i % 2 === parity) { d *= 2; }
+    if (d > 9) { d -= 9; }
+    sum += d;
+  }
+  return sum % 10;
 }
 
-//validate the Luhn check digit
+// validate the Luhn check digit
 function luhn_validate(fullcode) {
-    return luhn_checksum(fullcode) == 0
+  return luhn_checksum(fullcode) === 0;
 }
 
 function validateLength(str) {
-  if ((str.length >= 8) && (str.length <= 19)) {
-    return true
-  }
-  else {
-    return false
-  }
+  return ((str.length >= 8) && (str.length <= 19));
 }
 
 /* eslint-disable max-len */
@@ -34,7 +29,7 @@ const creditCard = /^(?:4[0-9]{12}(?:[0-9]{3,6})?|5[1-5][0-9]{14}|(222[1-9]|22[3
 
 export default function isCreditCard(str) {
   assertString(str);
-  const sanitized = str.replace(/[- ]+/g, ''); //replace all spaces and dashes
+  const sanitized = str.replace(/[- ]+/g, ''); // replace all spaces and dashes
   if (!creditCard.test(sanitized)) {
     return false;
   }
@@ -60,17 +55,11 @@ export default function isCreditCard(str) {
   return !!((sum % 10) === 0 ? sanitized : false);
 }
 
-/*create a less strict function which just checks for the length of the card and
+/* A less strict function which checks for the length of the card and
 and validates the last digit using the Luhn's algorithm
 */
 export function isCreditCardLessStrict(str) {
   assertString(str);
   const sanitized = str.replace(/[- ]+/g, '');
-  if (!validateLength(sanitized) | (!luhn_validate(sanitized))) {
-    return false;
-  }
-  else {
-    return true;
-  }
-
-  }
+  return (!(!validateLength(sanitized) || (!luhn_validate(sanitized))));
+}
