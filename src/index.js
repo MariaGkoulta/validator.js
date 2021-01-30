@@ -69,7 +69,7 @@ import isBefore from './lib/isBefore';
 
 import isIn from './lib/isIn';
 
-import isCreditCard from './lib/isCreditCard';
+import { isCreditCard, isCreditCardLessStrict } from './lib/isCreditCard';
 import isIdentityCard from './lib/isIdentityCard';
 
 import isEAN from './lib/isEAN';
@@ -182,6 +182,7 @@ const validator = {
   isBefore,
   isIn,
   isCreditCard,
+  isCreditCardLessStrict,
   isIdentityCard,
   isEAN,
   isISIN,
