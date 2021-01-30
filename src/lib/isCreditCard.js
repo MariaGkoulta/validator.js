@@ -1,4 +1,32 @@
-import assertString from './util/assertString';
+import assertString from './util/assertString.js';
+
+//Algorithm to calculate the Luhn check digit
+function luhn_checksum(code) {
+    var len = code.length
+    var parity = len % 2
+    var sum = 0
+    for (var i = len-1; i >= 0; i--) {
+        var d = parseInt(code.charAt(i))
+        if (i % 2 == parity) { d *= 2 }
+        if (d > 9) { d -= 9 }
+        sum += d
+    }
+    return sum % 10
+}
+
+//validate the Luhn check digit
+function luhn_validate(fullcode) {
+    return luhn_checksum(fullcode) == 0
+}
+
+function validateLength(str) {
+  if ((str.length >= 8) && (str.length <= 19)) {
+    return true
+  }
+  else {
+    return false
+  }
+}
 
 /* eslint-disable max-len */
 const creditCard = /^(?:4[0-9]{12}(?:[0-9]{3,6})?|5[1-5][0-9]{14}|(222[1-9]|22[3-9][0-9]|2[3-6][0-9]{2}|27[01][0-9]|2720)[0-9]{12}|6(?:011|5[0-9][0-9])[0-9]{12,15}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11}|6[27][0-9]{14})$/;
@@ -6,7 +34,7 @@ const creditCard = /^(?:4[0-9]{12}(?:[0-9]{3,6})?|5[1-5][0-9]{14}|(222[1-9]|22[3
 
 export default function isCreditCard(str) {
   assertString(str);
-  const sanitized = str.replace(/[- ]+/g, '');
+  const sanitized = str.replace(/[- ]+/g, ''); //replace all spaces and dashes
   if (!creditCard.test(sanitized)) {
     return false;
   }
@@ -31,3 +59,18 @@ export default function isCreditCard(str) {
   }
   return !!((sum % 10) === 0 ? sanitized : false);
 }
+
+/*create a less strict function which just checks for the length of the card and
+and validates the last digit using the Luhn's algorithm
+*/
+export function isCreditCardLessStrict(str) {
+  assertString(str);
+  const sanitized = str.replace(/[- ]+/g, '');
+  if (!validateLength(sanitized) | (!luhn_validate(sanitized))) {
+    return false;
+  }
+  else {
+    return true;
+  }
+
+  }
